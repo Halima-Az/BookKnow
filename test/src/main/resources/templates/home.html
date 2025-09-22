@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <head>
+        <title>Home-BookKnow</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <style>
+            .welcome-message {
+
+                padding: 1.5rem;
+                background: linear-gradient(to right, #f8f9fa, #e9ecef);
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                color: #343a40;
+                font-family: 'Segoe UI', sans-serif;
+            }
+
+            .welcome-message h2 {
+                font-size: 1.8rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+            }
+            .nom,.prenom{
+                font-weight: bolder;
+                color:#f9a825;
+            }
+            .type-books {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                justify-content: center;
+                padding: 2rem;
+
+                background-color: #f9f9f9;
+
+            }
+
+            .book-card {
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                padding: 1.5rem;
+                width: 250px;
+                text-align: center;
+                transition: transform 0.3s ease;
+            }
+
+            .book-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .book-card h3 {
+                margin-bottom: 0.5rem;
+                font-size: 1.2rem;
+                color: #333;
+            }
+
+            .book-card p {
+                font-size: 0.95rem;
+                color: #666;
+                margin-bottom: 1rem;
+            }
+
+            .book-card a {
+                text-decoration: none;
+                color: #0077cc;
+                font-weight: bold;
+            }
+
+            .book-card a:hover {
+                text-decoration: underline;
+            }
+            .addbook{
+                background-color: #f9a825;
+                padding: 0.75rem 2rem;
+                font-size: 1.25rem;
+                border: none;
+                border-radius: 8px;
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+            .addbook:hover{
+                transform: scale(1.05);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+            }
+            .empty{
+                padding:60px
+            }
+
+        </style>
+    </head>
+    <body>
+        <nav th:replace="fragments::navbar"></nav>
+        <div class="welcome-message">
+
+            <h2 class="hi text-center">Hello good reader <span th:text="${nom}" class="nom"></span> <span th:text="${prenom}" class="prenom"></span>👋</h2>
+
+        </div>
+
+        <div class="type-books" sec:authorize="hasRole('ADMIN')">
+            <a class="btn btn-primary fs-5 fw-bold  addbook" th:href="@{/admin/addbook}">📘 Add book</a>
+        </div>
+        <div class="type-books ">
+            <div class="book-card">
+                <h3>📚 Fiction</h3>
+                <p>Explore imaginative storytelling, from classics to modern novels.</p>
+                <a th:href="@{/books/types/Fiction}" >Voir plus</a>
+            </div>
+
+            <div class="book-card">
+                <h3>📖 Non-Fiction</h3>
+                <p>Learn from real-world experiences, biographies, and essays.</p>
+                <a th:href="@{/books/types/Non_Fiction}">Voir plus</a>
+            </div>
+
+            <div class="book-card">
+                <h3>🔬 Science</h3>
+                <p>Understand the universe through physics, biology, and more.</p>
+                <a th:href="@{/books/types/Science}" >Voir plus</a>
+            </div>
+
+            <div class="book-card">
+                <h3>💼 Business</h3>
+                <p>Boost your career with insights on leadership and strategy.</p>
+                <a th:href="@{/books/types/Business}">Voir plus</a>
+            </div>
+
+            <div class="book-card">
+                <h3>🧘 Self-Help</h3>
+                <p>Grow personally and emotionally with practical advice.</p>
+                <a th:href="@{/books/types/Self_help}">Voir plus</a>
+            </div>
+
+            <div class="book-card">
+                <h3>🎨 Art & Design</h3>
+                <p>Discover creativity through visual arts, architecture, and design.</p>
+                <a th:href="@{/books/types/Art_design}">Voir plus</a>
+            </div>
+        </div>
+        <div class="empty">
+         
+        </div>
+
+
+        <footer th:replace="fragments::footer"></footer>
+    </body>
+</html>

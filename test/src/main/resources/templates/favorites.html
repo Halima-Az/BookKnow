@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>My Favorite Books</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <!-- Bootstrap & Font Awesome -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+        <style>
+            body {
+                background-color: #f8f9fa; /* Fond neutre */
+            }
+            .page-title {
+                font-size: 2rem;
+                font-weight: 700;
+                color: #333;
+            }
+            .book-card {
+                border-radius: 15px;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+            .book-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            }
+            .bookImage {
+                max-height: 200px;
+                border-radius: 10px;
+            }
+            .table th {
+                width: 35px;
+            }
+            .btn-action {
+                width: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Navbar -->
+        <nav th:replace="fragments::navbar"></nav>
+        <nav th:replace="fragments::breadcrumb"></nav>
+
+        <!-- Title -->
+        <div class="container text-center my-5">
+            <h2 class="page-title"><i class="fa-solid fa-heart text-danger me-2"></i> Your Favorite Books</h2>
+            <p class="text-muted">Here are the books you’ve added to your favorites list.</p>
+        </div>
+
+        <!-- Favorites List -->
+        <div class="container">
+            <div th:if="${!favorites.isEmpty()}" class="row g-4 justify-content-center">
+                <div class="col-lg-4 col-md-6 col-sm-10" th:each="book : ${favorites}">
+                    <div class="card h-100 shadow-sm book-card p-3">
+                        <div class="text-center">
+                            <img th:src="@{'/external-images/' + ${book.image}}"
+                                 alt="Cover of [[${book.nom}]]"
+                                 class="bookImage img-fluid mb-3"/>
+                            <h5 class="card-title text-primary fw-bold mb-3" th:text="${book.nom}"></h5>
+                        </div>
+
+                        <!-- Infos -->
+                        <table class="table table-borderless table-sm text-start mb-3">
+                            <tbody>
+                                <tr>
+                                    <th><i class="fa-solid fa-user-pen text-secondary"></i></th>
+                                    <td th:text="${book.writer}"></td>
+                                </tr>
+                                <tr>
+                                    <th><i class="fa-solid fa-calendar-days text-secondary"></i></th>
+                                    <td th:text="${book.date}"></td>
+                                </tr>
+                                <tr>
+                                    <th><i class="fa-solid fa-book-open text-secondary"></i></th>
+                                    <td th:text="${book.type}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Actions -->
+                        <div class="d-grid gap-2">
+                            <a th:href="@{'/books/pdf/' + ${book.id}}" 
+                               class="btn btn-outline-primary btn-sm fw-semibold" target="_blank">
+                                <i class="fa-solid fa-book-open me-1"></i> See PDF
+                            </a>
+
+                            <!-- Retirer des favoris -->
+                            <form th:action="@{/favorites/remove/{id}(id=${book.id})}" method="post">
+                                <button type="submit" class="btn btn-outline-danger btn-sm btn-action">
+                                    <i class="fa-solid fa-heart-crack"></i> Remove from favorites
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message si vide -->
+            <div th:if="${favorites.isEmpty()}" class="text-center text-muted py-5">
+                <i class="fa-solid fa-circle-info fa-2x mb-3"></i>
+                <p>No favorite books yet. Go explore and add some!</p>
+            </div>
+        </div>
+        <div class="p-4 m-4"></div>
+        <!-- Footer -->
+        <nav th:replace="fragments::footer"></nav>
+    </body>
+</html>

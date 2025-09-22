@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Books of type [[${type}]]</title>
+        <link rel="stylesheet" th:href="@{/css/style.css}">
+        <link rel="stylesheet" th:href="@{/css/bookstyle.css}">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    </head>
+    <body class="bg-light">
+
+
+        <!-- Navbar -->
+        <nav th:replace="fragments::navbar"></nav>
+        <nav th:replace="fragments::breadcrumb"></nav>
+
+        <div class="container mt-3">
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-circle-check me-2"></i>
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div th:if="${remove}" class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="fa-solid fa-info-circle me-2"></i>
+                <span th:text="${remove}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>    
+        <div class="container py-4">
+            <!-- Page Title -->
+            <div class="text-center mb-4">
+                <p class="display-5 fw-bold fs-3 booktype">
+                    Books of type : <span id="typewriter" th:text="${type}" class="fw-bold"></span>
+                </p>
+               
+            </div>
+
+            <!-- Message if no books -->
+            <div th:if="${message}" class="text-center nobook rounded-3 shadow-sm">
+                <p class="text-dark fw-semibold fs-5 mb-0">
+                    <i class="fa-solid fa-circle-exclamation text-warning me-2"></i>
+                    <span th:text="${message}"></span>
+                </p>
+            </div>
+
+            <!-- Books List -->
+
+            <div th:if="${!books.isEmpty()}" class="row g-4 justify-content-center">
+                <!-- Carte plus large -->
+                <div class="col-lg-5 col-md-6 col-sm-10" th:each="book : ${books}">
+                    <div class="card h-100 shadow-sm book-card">
+                        <div class="row g-0 align-items-center">
+                            <!-- Image + PDF -->
+                            <div class="col-6 text-center p-4">
+                                <img th:src="@{'/external-images/' + ${book.image}}" 
+                                     alt="Cover of [[${book.nom}]]" 
+                                     class="bookImage img-fluid mb-3"/>
+                                <a th:href="@{'/books/pdf/' + ${book.id}}" 
+                                   class="btn btn-outline-primary btn-sm fw-semibold" 
+                                   target="_blank">
+                                    <i class="fa-solid fa-book-open me-1"></i> See PDF
+                                </a>
+                            </div>
+
+                            <!-- Infos -->
+                            <div class="col-6 text-center p-3">
+                                <h5 class="card-title text-center text-warning fw-bold my-3" th:text="${book.nom}"></h5>
+
+                                <table class="table table-borderless table-sm text-start mb-4">
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-muted pe-2"><i class="fa-solid fa-user-pen me-2"></i></th>
+                                            <td><span th:text="${book.writer}"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-muted pe-2"><i class="fa-solid fa-calendar-days me-2"></i></th>
+                                            <td><span th:text="${book.date}"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-muted pe-2"><i class="fa-solid fa-language me-2"></i></th>
+                                            <td><span th:text="${book.language}"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <form th:action="@{/favorites/toggle/{type}/{id}(type=${book.type},id=${book.id})}" method="post" class="favorite-form">
+                                    <button type="submit" class="btn-fav">
+                                        <i th:class="${favorites != null and #lists.contains(favorites, book)} 
+                                           ? 'fa-solid fa-heart text-danger' 
+                                           : 'fa-regular fa-heart text-muted'"></i>
+                                    </button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4"></div> 
+        </div>
+
+
+        <!-- Footer -->
+        <nav th:replace="fragments::footer"></nav>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const element = document.getElementById("typewriter");
+        if (!element) return; // sécurité si l’élément n’existe pas
+
+        const text = element.textContent.trim();  // récupère le texte Thymeleaf
+        element.textContent = "";                 // efface le contenu
+
+        let index = 0;
+        function typeWriter() {
+            if (index < text.length) {
+                element.textContent += text.charAt(index); // ajoute une lettre
+                index++;
+                setTimeout(typeWriter, 120); // vitesse d'écriture
+            }
+        }
+
+        typeWriter();
+    });
+        </script>
+
+    </body>
+</html>
